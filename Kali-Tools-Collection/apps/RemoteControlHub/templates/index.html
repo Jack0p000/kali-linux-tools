@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RemoteControlHub</title>
+<style>
+
+:root{color-scheme:dark;--bg:#070d18;--panel:#101b2b;--panel2:#14243a;--line:#263b55;--text:#e8f1ff;--muted:#91a4bd;--blue:#55b8ff;--cyan:#58e0dc;--green:#53d6a2;--red:#ff7f91;--shadow:0 18px 55px #0007}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% -10%,#16416a66,transparent 38%),radial-gradient(ellipse at 100% 10%,#15565b33,transparent 34%),linear-gradient(145deg,#080f1c,#0a1422 55%,#08111e);color:var(--text);font:14px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.shell{min-height:100vh;display:grid;grid-template-columns:245px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;padding:24px 17px;background:#081321e8;border-right:1px solid #20364e;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 8px 25px;border-bottom:1px solid #20364e}
+.brandmark{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(140deg,#1d9be8,#1b587f);font-weight:900;box-shadow:0 8px 25px #168ee344}
+.brand b{display:block;font-size:13px;letter-spacing:.13em}.brand small{display:block;color:#7891aa;font-size:9px;letter-spacing:.13em;margin-top:2px}
+.navlabel{margin:26px 9px 10px;color:#5e7893;font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.nav a{display:block;padding:10px 12px;margin:4px 0;border:1px solid transparent;border-radius:10px;color:#a8bfd6;text-decoration:none;font-size:12px}
+.nav a:hover,.nav a.active{background:linear-gradient(100deg,#143450,#10253a);border-color:#2b5271;color:#eff8ff}
+.sidebarfoot{margin-top:auto;padding:14px 12px;border:1px solid #1d3b50;border-radius:12px;background:#0b1a29}.sidebarfoot b{display:block;font-size:11px}.sidebarfoot small{color:#7992aa;font-size:10px}
+.main{min-width:0;padding:28px clamp(18px,4vw,54px) 55px}
+.wrap{width:100%;max-width:1500px;margin:0 auto;padding:0 0 20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:8px 0 28px;border-bottom:1px solid #263a50}
+h1{margin:0;font-size:clamp(27px,4vw,42px);line-height:1.08;letter-spacing:-.055em;font-weight:850}
+h1:before{content:"";display:inline-block;width:9px;height:31px;margin-right:13px;border-radius:8px;background:linear-gradient(var(--cyan),var(--blue));box-shadow:0 0 22px #50cfff99;vertical-align:-4px}
+.sub{color:var(--muted);margin:10px 0 0 23px;font-size:13px}
+.top>.muted{padding:9px 13px;border:1px solid #2b4b67;border-radius:999px;background:#10243a;color:#9acfff;font:11px ui-monospace,monospace;letter-spacing:.1em}
+.panel{position:relative;background:linear-gradient(145deg,#122238ee,#0d1929f2);border:1px solid #29425d;border-radius:17px;padding:23px;margin:20px 0;box-shadow:var(--shadow),inset 0 1px #ffffff0b;overflow:hidden}
+.panel:before{content:"";position:absolute;top:0;left:7%;right:7%;height:1px;background:linear-gradient(90deg,transparent,#54bfff88,transparent)}
+input{width:min(70%,620px);min-width:220px;background:#081321;color:var(--text);border:1px solid #35516f;border-radius:10px;padding:14px 16px;outline:none;transition:.2s}
+input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #55b8ff20}
+input::placeholder{color:#7188a2}
+button{background:linear-gradient(120deg,#1688d8,#2468b5);color:white;border:1px solid #5bbaff66;border-radius:10px;padding:12px 17px;font-weight:750;letter-spacing:.025em;cursor:pointer;margin:4px;box-shadow:0 7px 20px #087bd322;transition:transform .18s,filter .18s,border-color .18s}
+button:hover{transform:translateY(-1px);filter:brightness(1.14);border-color:#8bd4ff}
+button:active{transform:translateY(0)}
+button.alt{background:#182a40;color:#cfe7ff;border:1px solid #3b5877;box-shadow:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
+.card{min-width:0;background:linear-gradient(145deg,#10243a,#0b1828);border:1px solid #2b4561;border-radius:13px;padding:17px;box-shadow:inset 0 1px #ffffff08}
+.big{font-size:clamp(19px,2.3vw,26px);font-weight:800;letter-spacing:-.035em;overflow-wrap:anywhere;margin-top:5px}
+.muted{color:var(--muted)}
+.ok{color:var(--green)}.bad{color:var(--red)}
+table{width:100%;border-collapse:separate;border-spacing:0;margin-top:13px;font-size:13px;overflow:hidden;border:1px solid #2b4058;border-radius:11px}
+td,th{text-align:left;padding:13px 14px;border-bottom:1px solid #263b52}
+th{color:#a8c2dc;background:#14263c;font:10px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
+td{color:#d8e7f7;background:#0c1929}
+tr:last-child td{border-bottom:0}
+.actions{margin-top:12px}
+.log{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111e;border:1px solid #253c55;border-radius:11px;padding:16px;min-height:105px;color:#a9c6df;font:12px/1.65 ui-monospace,monospace}
+#result>.muted{padding:10px}
+#tvPairMsg,#tvMirrorMsg{padding:10px 12px;border-radius:9px;background:#0a1726;border:1px solid #263d56}
+@media(max-width:780px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:12px 15px;border-right:0;border-bottom:1px solid #20364e}.brand{padding:0 4px 10px}.navlabel,.sidebarfoot{display:none}.nav{display:flex;overflow:auto;padding-top:10px}.nav a{white-space:nowrap;padding:8px 10px}.main{padding:18px 15px 35px}.wrap{padding:0}.top{align-items:flex-start;flex-direction:column}.panel{padding:16px;margin:14px 0}input{width:100%;min-width:0}#target+button{width:100%;margin:10px 0 0}table{display:block;overflow-x:auto;white-space:nowrap}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.sub{margin-left:0}}
+
+</style>
+</head>
+<body>
+<div class="shell"><aside class="sidebar"><div class="brand"><div class="brandmark">R</div><div><b>REMOTE HUB</b><small>DEVICE CONTROL</small></div></div><div class="navlabel">Workspace</div><nav class="nav"><a class="active" href="/">◈ &nbsp; Controllo dispositivi</a><a href="http://127.0.0.1:8790/">⌂ &nbsp; Command Center</a><a href="http://127.0.0.1:5050/">⌁ &nbsp; NetScope</a></nav><div class="sidebarfoot"><b>SESSIONE LOCALE</b><small>Solo dispositivi autorizzati</small></div></aside><main class="main">
+<div class="wrap">
+<div class="top">
+<div>
+<h1>RemoteControlHub</h1>
+<div class="sub">Remote administration tramite servizi già presenti sul dispositivo</div>
+</div>
+<div class="muted">Kali Linux</div>
+</div>
+
+<div class="panel">
+<input id="target" placeholder="IP o hostname, es. 192.168.1.25">
+<button onclick="scan()">SCANSIONA</button>
+</div>
+
+<div id="result" class="panel">
+<div class="muted">Inserisci un dispositivo per iniziare.</div>
+</div>
+
+<div class="panel">
+<b>Log</b>
+<div id="log" class="log">Nessuna scansione eseguita.</div>
+</div>
+
+<div class="panel muted">
+Usa il tool solo su dispositivi tuoi o per i quali hai autorizzazione. Nessuna credenziale viene salvata.
+</div>
+</div>
+</main></div>
+
+<script>
+const $ = s => document.querySelector(s);
+
+function esc(x){
+    return String(x ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    }[c]));
+}
+
+async function scan(){
+    const t = $("#target").value.trim();
+    if(!t) return;
+
+    $("#result").innerHTML = "<div class='muted'>Scansione in corso...</div>";
+    $("#log").textContent = "Avvio scansione: " + t;
+
+    try{
+        const r = await fetch("/api/scan", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({target:t})
+        });
+
+        const d = await r.json();
+        if(!r.ok) throw Error(d.error);
+
+        render(d);
+        $("#log").textContent = d.raw || "Scansione completata.";
+    }catch(e){
+        $("#result").innerHTML = "<div class='bad'>Errore: " + esc(e.message) + "</div>";
+        $("#log").textContent = "Scansione fallita: " + e.message;
+    }
+}
+
+function render(d){
+    let rows = d.ports.map(p =>
+        `<tr>
+            <td>${p.port}</td>
+            <td>${esc(p.protocol)}</td>
+            <td>${esc(p.state)}</td>
+            <td>${esc(p.service)}</td>
+            <td>${esc(p.version)}</td>
+        </tr>`
+    ).join("");
+
+    let btn = d.services.map(s => {
+        let m =
+            s.name==="SSH" ? "ssh" :
+            s.name==="RDP" ? "rdp" :
+            s.name==="VNC" ? "vnc" :
+            s.name==="ADB" ? "adb" :
+            s.name==="WinRM HTTP" || s.name==="WinRM HTTPS" ? "winrm" :
+            null;
+
+        if(!m) return "";
+
+        return `<button class="alt" onclick="connect('${m}')">${esc(s.name)}</button>`;
+    }).join("");
+
+    const hasAdb = d.services.some(s => s.port === 5555);
+    const hasTv = !!d.android_tv;
+
+    $( "#result" ).innerHTML = `
+        <div class="grid">
+            <div class="card">
+                <div class="muted">TARGET</div>
+                <div class="big">${esc(d.target)}</div>
+            </div>
+            <div class="card">
+                <div class="muted">STATO</div>
+                <div class="big ${d.online?'ok':'bad'}">${d.online?'ONLINE':'OFFLINE'}</div>
+            </div>
+            <div class="card">
+                <div class="muted">NOME</div>
+                <div class="big">${esc(d.hostname || "Non rilevato")}</div>
+            </div>
+            <div class="card">
+                <div class="muted">SERVIZI APERTI</div>
+                <div class="big">${d.services.length}</div>
+            </div>
+        </div>
+
+        <div style="margin-top:18px">
+            <b>Connessione</b>
+            <div class="actions" style="margin-top:10px">
+                ${btn || "<span class='muted'>Nessun metodo di controllo remoto rilevato.</span>"}
+
+                ${hasAdb ? `
+                    <div style="margin-top:10px">
+                        <button onclick="adbMirror()">CONNETTI ADB + AVVIA MIRRORING</button>
+                    </div>
+                ` : ""}
+                ${hasTv ? `
+                    <div style="margin-top:10px">
+                        <button onclick="tvMirror()">MIRROR TV → PC</button>
+                    </div>
+                ` : ""}
+            </div>
+        </div>
+
+        ${hasTv ? tvPanel() : ""}
+
+        ${hasTv ? tvMirrorPanel() : ""}
+
+        <div style="margin-top:18px">
+            <b>Porte rilevate</b>
+            <table>
+                <tr>
+                    <th>Porta</th>
+                    <th>Proto</th>
+                    <th>Stato</th>
+                    <th>Servizio</th>
+                    <th>Versione</th>
+                </tr>
+                ${rows || "<tr><td colspan='5'>Nessuna porta rilevata</td></tr>"}
+            </table>
+        </div>
+    `;
+}
+
+function tvPanel(){
+    const b=(key,label)=>'<button onclick="tvKey(\''+key+'\')">'+label+'</button>';
+    return '<div class="panel" style="margin-top:18px"><b>Android TV Remote</b>' +
+           '<div class="muted" style="margin:8px 0">La TV espone il protocollo Android TV Remote.</div>' +
+           '<div><input id="tvPairCode" maxlength="6" placeholder="Codice pairing 6 caratteri" style="width:220px">' +
+           '<button onclick="startTvPair()">AVVIA PAIRING</button><button onclick="finishTvPair()">CONFERMA PIN</button></div>' +
+           '<div id="tvPairMsg" class="muted" style="margin:8px 0"></div>' +
+           '<div style="text-align:center;max-width:420px;margin:auto">' +
+           '<div>'+b("POWER","POWER")+b("HOME","HOME")+b("MENU","MENU")+'</div>' +
+           '<div>'+b("BACK","BACK")+b("DPAD_UP","▲")+b("DPAD_CENTER","OK")+b("INFO","INFO")+'</div>' +
+           '<div>'+b("DPAD_LEFT","◀")+b("DPAD_DOWN","▼")+b("DPAD_RIGHT","▶")+'</div>' +
+           '<div>'+b("VOLUME_DOWN","VOL −")+b("VOLUME_MUTE","MUTE")+b("VOLUME_UP","VOL +")+'</div>' +
+           '<div>'+b("MEDIA_PLAY_PAUSE","PLAY / PAUSA")+b("TV_INPUT","INPUT")+'</div></div></div>';
+}
+function tvMirrorPanel(){
+    return '<div class="panel" style="margin-top:18px"><b>TV → PC</b>' +
+           '<div class="muted" style="margin:8px 0">Mirroring automatico delle Android TV rilevate tramite ADB + scrcpy.</div>' +
+           '<button onclick="tvMirror()">MIRROR TV → PC</button>' +
+           '<button class="alt" onclick="checkTvMirror()">VERIFICA</button>' +
+           '<div id="tvMirrorMsg" class="muted" style="margin-top:10px">Pronto.</div></div>';
+}
+
+async function tvMirror(){
+    const target=$("#target").value.trim();
+    const msg=$("#tvMirrorMsg");
+    if(!target) return;
+    msg.textContent="Connessione ADB e avvio mirroring...";
+    try{
+        const r=await fetch("/api/tv/mirror",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({target})});
+        const d=await r.json();
+        if(!r.ok) throw Error(d.message || d.error);
+        msg.innerHTML="<span class='ok'>Mirroring avviato.</span> "+esc(d.message);
+        $("#log").textContent=d.message;
+    }catch(e){
+        msg.innerHTML="<span class='bad'>Errore: "+esc(e.message)+"</span>";
+        $("#log").textContent="TV mirror: "+e.message;
+    }
+}
+
+async function checkTvMirror(){
+    const target=$("#target").value.trim();
+    const msg=$("#tvMirrorMsg");
+    msg.textContent="Verifica in corso...";
+    try{
+        const r=await fetch("/api/tv/mirror/check",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({target})});
+        const d=await r.json();
+        if(!r.ok) throw Error(d.error);
+        let html="<b>Risultato:</b><br>";
+        html += d.adb.available ? "<span class='ok'>ADB: disponibile</span> — "+esc(d.adb.detail)+"<br>" : "<span class='bad'>ADB: non disponibile</span><br>";
+        html += d.cast.available ? "<span class='ok'>Google Cast/DIAL: disponibile</span> — "+esc(d.cast.detail)+"<br>" : "<span class='bad'>Google Cast/DIAL: non rilevato</span><br>";
+        html += d.capture.available ? "<span class='ok'>Cattura TV → PC: possibile da verificare</span>" : "<span class='bad'>Cattura TV → PC: non disponibile con i servizi esposti attualmente</span>";
+        msg.innerHTML=html;
+    }catch(e){msg.innerHTML="<span class='bad'>Errore: "+esc(e.message)+"</span>";}
+}
+
+let tvPairToken = null;
+async function startTvPair(){
+    const target=$("#target").value.trim();
+    const msg=$("#tvPairMsg");
+    msg.textContent="Avvio pairing...";
+    try{
+        const r=await fetch("/api/tv/pair/start",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({target})});
+        const d=await r.json();
+        if(!r.ok) throw Error(d.error);
+        tvPairToken=d.token;
+        msg.textContent=d.message;
+    }catch(e){msg.textContent="Errore: "+e.message;}
+}
+async function finishTvPair(){
+    const target=$("#target").value.trim();
+    const code=$("#tvPairCode").value.trim().toUpperCase();
+    const msg=$("#tvPairMsg");
+    if(!tvPairToken){msg.textContent="Prima premi AVVIA PAIRING.";return;}
+    if(!code){msg.textContent="Inserisci il codice mostrato dalla TV.";return;}
+    try{
+        const r=await fetch("/api/tv/pair/finish",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({target,token:tvPairToken,code})});
+        const d=await r.json();
+        if(!r.ok) throw Error(d.error);
+        msg.textContent=d.message;
+        tvPairToken=null;
+    }catch(e){msg.textContent="Errore pairing: "+e.message;}
+}
+async function tvKey(key){
+    const target=$("#target").value.trim();
+    try{
+        const r=await fetch("/api/tv/key",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({target,key})});
+        const d=await r.json();
+        if(!r.ok) throw Error(d.error);
+        $("#log").textContent=d.message;
+    }catch(e){$("#log").textContent="TV: "+e.message;}
+}
+
+async function adbMirror(){
+    const target = $("#target").value.trim();
+
+    if(!target) return;
+
+    $("#log").textContent =
+        "Connessione ADB a " + target + ":5555 e avvio mirroring...";
+
+    try{
+        const r = await fetch("/api/adb/mirror", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({target})
+        });
+
+        const d = await r.json();
+
+        $("#log").textContent =
+            d.message || d.error || "Operazione completata.";
+
+        if(!r.ok){
+            $("#log").classList.add("bad");
+        }else{
+            $("#log").classList.remove("bad");
+        }
+    }catch(e){
+        $("#log").textContent = "Errore ADB/mirroring: " + e.message;
+        $("#log").classList.add("bad");
+    }
+}
+
+async function connect(method){
+    const target = $("#target").value.trim();
+
+    const r = await fetch("/api/launch", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({target,method})
+    });
+
+    const d = await r.json();
+
+    $("#log").textContent =
+        d.message || d.error || "Operazione completata.";
+}
+</script>
+</body>
+</html>

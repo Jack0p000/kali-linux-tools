@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080f1b">
+<title>NetScope · Network Intelligence</title>
+<style>
+:root{color-scheme:dark;--bg:#070d17;--panel:#101e30;--panel2:#14263b;--line:#29435e;--text:#eaf3ff;--muted:#8ea5bd;--blue:#57baff;--cyan:#5ce0d6;--green:#60d9a7;--red:#ff8494}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% -8%,#16487566,transparent 38%),radial-gradient(ellipse at 95% 5%,#0d646044,transparent 32%),linear-gradient(145deg,#070d17,#0a1524 55%,#08111e);color:var(--text);font:14px/1.55 Inter,ui-sans-serif,system-ui,sans-serif}
+.shell{min-height:100vh;display:grid;grid-template-columns:245px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;padding:24px 17px;background:#081321e8;border-right:1px solid #20364e;display:flex;flex-direction:column}
+.brand{display:flex;gap:12px;align-items:center;padding:4px 8px 25px;border-bottom:1px solid #20364e}.brandmark{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(140deg,#1d9be8,#1b587f);font-weight:900;box-shadow:0 8px 25px #168ee344}
+.brand b{display:block;font-size:13px;letter-spacing:.13em}.brand small{display:block;color:#7891aa;font-size:9px;letter-spacing:.13em;margin-top:2px}
+.navlabel{margin:26px 9px 10px;color:#5e7893;font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.navitem{padding:10px 12px;margin:4px 0;border:1px solid transparent;border-radius:10px;color:#a8bfd6;font-size:12px}.navitem.active{background:linear-gradient(100deg,#143450,#10253a);border-color:#2b5271;color:#eff8ff}
+.sidebarfoot{margin-top:auto;padding:14px 12px;border:1px solid #1d3b50;border-radius:12px;background:#0b1a29}.sidebarfoot b{display:block;font-size:11px}.sidebarfoot small{color:#7992aa;font-size:10px}
+main{min-width:0;padding:28px clamp(16px,4vw,52px) 55px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:3px 0 20px;border-bottom:1px solid #20364e}
+.crumb{color:#7894af;font:10px ui-monospace,monospace;letter-spacing:.14em}.status{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #285744;border-radius:999px;background:#0d2b25;color:#8ce4bd;font:10px ui-monospace,monospace;letter-spacing:.1em}.status:before{content:"";width:7px;height:7px;border-radius:50%;background:#5de1a7;box-shadow:0 0 12px #5de1a7}
+.hero{padding:32px 0 25px}.eyebrow{color:#5dc9ee;font:10px ui-monospace,monospace;letter-spacing:.2em}.hero h1{font-size:clamp(31px,4vw,47px);line-height:1.04;letter-spacing:-.06em;margin:10px 0}.hero p{color:var(--muted);margin:0;max-width:680px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px}.card{min-width:0;padding:19px 20px;border:1px solid #29435e;border-radius:15px;background:linear-gradient(145deg,#12243aee,#0c1929f5);box-shadow:0 16px 40px #0004,inset 0 1px #ffffff09}
+.statlabel{font:10px ui-monospace,monospace;letter-spacing:.13em;color:#8da9c4}.big{font-size:clamp(25px,3vw,35px);font-weight:850;letter-spacing:-.05em;margin-top:8px}.statfoot{color:#718ba5;font-size:11px;margin-top:3px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:18px}.toolbar h2{font-size:15px;margin:0}.toolbar p{margin:4px 0 0;color:var(--muted);font-size:12px}
+button{border:1px solid #58baff88;border-radius:10px;padding:12px 18px;background:linear-gradient(120deg,#168bd8,#2369b4);color:white;font-size:11px;font-weight:800;letter-spacing:.08em;cursor:pointer;box-shadow:0 8px 22px #087bd322;transition:.18s}
+button:hover{transform:translateY(-1px);filter:brightness(1.12)}button:disabled{opacity:.55;cursor:wait;transform:none}
+#msg{font-size:12px;color:#9fc5df}
+.tablewrap{width:100%;overflow:auto;border:1px solid #29435e;border-radius:13px}
+table{width:100%;min-width:780px;border-collapse:collapse}th,td{text-align:left;padding:14px 15px;border-bottom:1px solid #233a51;vertical-align:top}
+th{background:#142a41;color:#9fc3df;font:10px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+td{background:#0c1929;color:#dceafa}tr:last-child td{border-bottom:0}.name{color:#aebdcc;font-size:12px}.device{font-weight:700}.ok{color:var(--green);font-size:11px}
+.port{display:inline-block;margin:2px 4px 3px 0;padding:4px 7px;border:1px solid #31516d;border-radius:7px;background:#10263b;color:#a9d9f7;font:10px ui-monospace,monospace;white-space:nowrap}
+.empty{padding:36px 20px;text-align:center;color:#91a7bd}.empty strong{display:block;color:#d7e9f8;font-size:14px;margin-bottom:6px}
+.footer{margin-top:24px;padding-top:16px;border-top:1px solid #1e3348;color:#647f99;font:10px ui-monospace,monospace;letter-spacing:.08em}
+@media(max-width:850px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:12px 15px;border-right:0;border-bottom:1px solid #20364e}.brand{padding:0 4px 10px}.navlabel,.sidebarfoot{display:none}.navitem{display:inline-block;margin:9px 4px 0 0;padding:7px 10px}.main{padding:18px 15px 35px}}
+@media(max-width:580px){.stats{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.hero{padding:25px 0 20px}.toolbar{align-items:stretch;flex-direction:column}.toolbar button{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+ <div class="brand"><div class="brandmark">N</div><div><b>NETSCOPE</b><small>NETWORK INTELLIGENCE</small></div></div>
+ <div class="navlabel">Workspace</div><div class="navitem active">◈ &nbsp; Panoramica</div><div class="navitem">⌁ &nbsp; Host e servizi</div><div class="navitem">▤ &nbsp; Cronologia scansioni</div>
+ <div class="sidebarfoot"><b>AMBIENTE LOCALE</b><small>Analisi di reti autorizzate</small></div>
+</aside>
+<main>
+ <header class="topbar"><div class="crumb">KALI TOOLKIT / NETWORK ANALYSIS</div><div class="status">NETSCOPE ONLINE</div></header>
+ <section class="hero"><div class="eyebrow">NETWORK DISCOVERY · 01</div><h1>Network overview</h1><p>Panoramica dei dispositivi individuati, dei servizi esposti e delle scansioni recenti della rete autorizzata.</p></section>
+ <section class="stats">
+  <div class="card"><div class="statlabel">HOST ATTIVI</div><div id="hosts" class="big">—</div><div class="statfoot">Dispositivi nell'ultima scansione valida</div></div>
+  <div class="card"><div class="statlabel">PORTE RILEVATE</div><div id="ports" class="big">—</div><div class="statfoot">Servizi individuati sugli host</div></div>
+  <div class="card"><div class="statlabel">ULTIMA SCANSIONE</div><div id="last" class="big">—</div><div class="statfoot">Ora locale del dispositivo</div></div>
+ </section>
+ <section class="card">
+  <div class="toolbar"><div><h2>Inventario dispositivi</h2><p>Host, identificazione e porte rilevate</p></div><div><button id="scanBtn" onclick="scan()">▶ &nbsp; AVVIA SCANSIONE</button></div></div>
+  <div id="msg" role="status" aria-live="polite"></div>
+  <div id="table"><div class="empty"><strong>Caricamento inventario</strong>Recupero delle scansioni disponibili…</div></div>
+ </section>
+ <footer class="footer">NETSCOPE · LOCAL NETWORK INTELLIGENCE · TOOLSHARE INTEGRATION</footer>
+</main>
+</div>
+<script>
+function esc(v){return String(v??'-').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function load(){
+ try{
+  let s=await fetch('/api/scans').then(r=>{if(!r.ok)throw Error();return r.json()});
+  if(!s.length){hosts.textContent='0';ports.textContent='0';last.textContent='—';table.innerHTML='<div class="empty"><strong>Nessuna scansione disponibile</strong>Avvia una scansione per popolare l’inventario.</div>';return;}
+  let x=s.find(scan=>Number(scan.host_count)>0)||s[0];
+  hosts.textContent=x.host_count;
+  last.textContent=new Date(x.started_at).toLocaleTimeString();
+  let d=await fetch('/api/scan/'+x.id).then(r=>{if(!r.ok)throw Error();return r.json()});
+  let ps=0;for(let h of d.hosts)ps+=h.ports.length;ports.textContent=ps;
+  if(!d.hosts.length){table.innerHTML='<div class="empty"><strong>Nessun host nella scansione selezionata</strong>Non sono stati restituiti dispositivi.</div>';return;}
+  let rows=d.hosts.map(h=>{
+   let ports=h.ports.map(p=>'<span class="port">'+esc(p.port+'/'+p.protocol)+' · '+esc(p.service)+'</span>').join('')||'<span class="name">Nessuna porta rilevata</span>';
+   return '<tr><td><strong>'+esc(h.ip)+'</strong></td><td><div class="name">'+esc(h.device_name||h.hostname||'Nome non rilevato')+'</div><small>'+esc(h.mac||'MAC non rilevato')+'</small></td><td><div class="device">'+esc(h.device||'Tipo non rilevato')+'</div><small>'+esc(h.vendor||'Vendor non rilevato')+'</small><br><small>Affidabilità: '+esc(h.device_confidence||'—')+'</small><br><small>'+esc(h.device_reason||'Metodo non disponibile')+'</small><br><span class="ok">'+esc(h.status)+'</span></td><td>'+ports+'</td></tr>';
+  }).join('');
+  table.innerHTML='<div class="tablewrap"><table><thead><tr><th>Indirizzo IP</th><th>Dispositivo / MAC</th><th>Tipo / Vendor</th><th>Porte / Servizi</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+ }catch(e){msg.textContent='Errore nel caricamento dei dati. Verifica che il servizio sia attivo.';}
+}
+async function scan(){
+ const btn=document.getElementById('scanBtn');btn.disabled=true;msg.textContent='Scansione avviata…';
+ try{let r=await fetch('/api/scan',{method:'POST'});if(!r.ok)throw Error();msg.textContent='Scansione in corso. Aggiornamento automatico dei risultati…';}
+ catch(e){msg.textContent='Impossibile avviare la scansione.';btn.disabled=false;return;}
+ setTimeout(load,1200);setTimeout(load,5000);setTimeout(load,10000);setTimeout(()=>{btn.disabled=false;msg.textContent='Scansione completata o ancora in esecuzione.';},11000);
+}
+load();setInterval(load,10000);
+</script>
+</body></html>
