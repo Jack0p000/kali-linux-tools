@@ -1,53 +1,45 @@
 # Kali Tools Collection
 
-Raccolta di utility e applicazioni sviluppate per Kali Linux, con interfacce da terminale e dashboard web dove previste.
-
-Progetto personale per apprendimento, amministrazione e verifiche su sistemi e reti propri o per i quali si dispone di autorizzazione.
+Raccolta di utility e applicazioni personalizzate per Kali Linux, sviluppate per apprendimento, amministrazione, monitoraggio e verifiche su sistemi e reti propri o per i quali si dispone di autorizzazione.
 
 ## Struttura
 
 ### tools/
-- FileForensics
 - CertificateWatcher
+- CommandCenter
 - DNSInspector
+- FileForensics
+- FileIntegrityMonitor
+- KaliToolboxBuilder
+- PacketVisualizer
 - PortProcessMapper
 - WiFiSignalMapper
-- FileIntegrityMonitor
-- PacketVisualizer
-- KaliToolboxBuilder
-- CommandCenter
 
 ### apps/
+- BreachFinder
+- DesktopRemoteCommander
+- MatrixTerminal
 - NetScope
+- OSINT-Self-Audit
 - RemoteControlHub
 - SystemHealthCenter
+- ToolAuth
 - ToolShareHub
-- OSINT-Self-Audit
-- MatrixTerminal
-- AvviaDesktopCommander
-- ToolAuth (senza credenziali personali)
 
-### assets/
-Icone dei tool incluse nella raccolta.
+**Totale: 18 progetti** (9 tool e 9 applicazioni).
 
-## Requisiti
+## Requisiti e avvio
 
-I requisiti cambiano in base al singolo progetto. Consultare il README o i file di dipendenze presenti nella relativa cartella prima dell'avvio.
+I requisiti variano in base al progetto. Consultare il README e il file `requirements.txt`, se presente, nella cartella dello strumento. Gli script `run.sh` e `run_tool.sh` sono disponibili dove previsti.
 
 ## Sicurezza e privacy
 
 - Non sono inclusi database locali, report generati, sessioni, ambienti virtuali o dipendenze scaricate.
-- Le credenziali personali sono escluse: configurare le proprie credenziali localmente e non caricarle su GitHub.
+- Le credenziali personali non sono incluse. Configurare le proprie credenziali localmente e non caricarle su GitHub.
+- BreachFinder interroga metadati pubblici tramite XposedOrNot; non scarica dump di credenziali.
 - Usare gli strumenti esclusivamente su dispositivi, account e reti propri o con autorizzazione esplicita.
+- Verificare le impostazioni di rete e autenticazione prima di esporre un'interfaccia web.
 
-## Stato
+## Note
 
-Copia sorgente preparata per la pubblicazione. Verificare e completare le configurazioni specifiche di ciascun tool prima del rilascio pubblico.
-
-## Avviatori desktop
-
-La cartella `launchers/` contiene i file `.desktop` dei tool inclusi (escluso BreachFinder). Sono conservati come riferimento per l'installazione originale su Kali; i percorsi assoluti del computer di sviluppo potrebbero dover essere adattati su un'altra macchina.
-
-## Esclusioni intenzionali
-
-BreachFinder è escluso su richiesta. Non sono inclusi repository di terze parti installati sul sistema (ad esempio PhoneSploit, THC-Hydra, Skipfish o OWASP Dependency-Check), né backup, report, log e dati runtime.
+Questa repository raccoglie i progetti sviluppati per Kali Linux. Non include software di terze parti semplicemente installato sul sistema, backup, log, report o dati runtime.
