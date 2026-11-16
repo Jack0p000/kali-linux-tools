@@ -14,6 +14,7 @@ Raccolta di utility e applicazioni personalizzate per Kali Linux, sviluppate per
 - KaliToolboxBuilder
 - PacketVisualizer
 - PortProcessMapper
+- SatelliteIntel
 - WiFiSignalMapper
 
 ### apps/
@@ -27,7 +28,11 @@ Raccolta di utility e applicazioni personalizzate per Kali Linux, sviluppate per
 - ToolAuth
 - ToolShareHub
 
-**Totale: 19 progetti** (10 tool e 9 applicazioni).
+**Totale: 20 progetti** (11 tool e 9 applicazioni).
+
+## SatelliteIntel
+
+SatelliteIntel aggiunge una GUI per analizzare dati orbitali pubblici e cataloghi di osservazione della Terra. Usa TLE pubblici di CelesTrak, propagazione orbitale SGP4 locale e metadati Sentinel-2 del Copernicus Data Space. Permette di inserire coordinate, calcolare posizioni orbitali e individuare passaggi vicini al target, oltre a interrogare il catalogo Sentinel. Consultare [tools/SatelliteIntel/README.md](tools/SatelliteIntel/README.md) per requisiti e avvio.
 
 ## AutoSecFlow
 
@@ -42,6 +47,7 @@ I requisiti variano in base al progetto. Consultare il README e il file `require
 - Non sono inclusi database locali, report generati, sessioni, ambienti virtuali o dipendenze scaricate.
 - Le credenziali personali non sono incluse. Configurare le proprie credenziali localmente e non caricarle su GitHub.
 - BreachFinder interroga metadati pubblici tramite XposedOrNot; non scarica dump di credenziali.
+- SatelliteIntel analizza satelliti e dati pubblici di osservazione della Terra; non è progettato per localizzare persone o dispositivi.
 - Usare gli strumenti esclusivamente su dispositivi, account e reti propri o con autorizzazione esplicita.
 - Verificare le impostazioni di rete e autenticazione prima di esporre un'interfaccia web.
 
