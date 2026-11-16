@@ -1,10 +1,10 @@
 # Kali Linux Tools Collection
 
-Raccolta di **18 progetti personalizzati** sviluppati per Kali Linux: 9 tool e 9 applicazioni, con interfacce CLI e GUI web dove previste.
+Raccolta di **19 progetti personalizzati** sviluppati per Kali Linux: 10 tool e 9 applicazioni, con interfacce CLI e GUI web dove previste.
 
 ## Progetti inclusi
 
-- **Tools:** CertificateWatcher, CommandCenter, DNSInspector, FileForensics, FileIntegrityMonitor, KaliToolboxBuilder, PacketVisualizer, PortProcessMapper, WiFiSignalMapper.
+- **Tools:** AutoSecFlow, CertificateWatcher, CommandCenter, DNSInspector, FileForensics, FileIntegrityMonitor, KaliToolboxBuilder, PacketVisualizer, PortProcessMapper, WiFiSignalMapper.
 - **Apps:** BreachFinder, DesktopRemoteCommander, MatrixTerminal, NetScope, OSINT-Self-Audit, RemoteControlHub, SystemHealthCenter, ToolAuth, ToolShareHub.
 
 La struttura completa, i requisiti e le note di avvio sono disponibili nel [README della raccolta](Kali-Tools-Collection/README.md).
