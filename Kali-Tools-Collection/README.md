@@ -5,6 +5,7 @@ Raccolta di utility e applicazioni personalizzate per Kali Linux, sviluppate per
 ## Struttura
 
 ### tools/
+- AutoSecFlow
 - CertificateWatcher
 - CommandCenter
 - DNSInspector
@@ -26,7 +27,11 @@ Raccolta di utility e applicazioni personalizzate per Kali Linux, sviluppate per
 - ToolAuth
 - ToolShareHub
 
-**Totale: 18 progetti** (9 tool e 9 applicazioni).
+**Totale: 19 progetti** (10 tool e 9 applicazioni).
+
+## AutoSecFlow
+
+AutoSecFlow aggiunge un workflow builder visuale per concatenare controlli difensivi locali: snapshot del sistema, inventario SHA-256 di una directory, verifica della scadenza di certificati TLS e registrazione di eventi. I workflow sono salvati localmente; l'interfaccia è limitata a localhost e non accetta comandi shell arbitrari. Consultare [tools/AutoSecFlow/README.md](tools/AutoSecFlow/README.md) per requisiti e avvio.
 
 ## Requisiti e avvio
 
